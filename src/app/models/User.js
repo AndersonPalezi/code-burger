@@ -42,8 +42,13 @@ class User extends Model {
       }
     })
     // Retorna o this para continuar permitindo o encadeamento de chamadas (chaining).
-    return this;
+    return this
     
+  }
+  // Método checkPassword na classe de usuário
+checkPassword(password) {
+  // Compara a senha fornecida pelo usuário (password) com a senha armazenada no banco de dados (this.password_hash)
+  return bcrypt.compare(password, this.password_hash)
   }
 }
 
