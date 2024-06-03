@@ -1,6 +1,8 @@
 // Importa o módulo express para criar um servidor web
 import express from "express";
 
+import { resolve } from "path"
+
 // Importa as rotas definidas no arquivo routes
 import routes from "./routes";
 
@@ -25,6 +27,10 @@ class App {
     middlewares() {
         // Adiciona o middleware express.json() para que a aplicação possa lidar com requisições JSON
         this.app.use(express.json());
+        this.app.use(
+        "/product-file",
+        express.static(resolve(__dirname,"..","uploads"))
+    )
     }
 
     // Método routes responsável por configurar as rotas da aplicação

@@ -7,8 +7,10 @@ import configDatabase from "../config/database";
 // Importa o modelo User
 import User from "../app/models/User";
 
+import Product from "../app/models/Product";
+
 // Cria um array contendo todos os modelos a serem inicializados
-const models = [User];
+const models = [User, Product];
 
 // Define a classe Database que será responsável pela inicialização e configuração do banco de dados
 class Database {
