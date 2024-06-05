@@ -1,45 +1,43 @@
-import * as Yup from "yup"; // Importa o pacote Yup para validação de esquemas
-import User from "../models/User"; // Importa o modelo de usuário
+import * as Yup from 'yup'
+import jwt from 'jsonwebtoken'
+import authConfig from '../../config/auth'
+import User from '../models/User'
 
 class SessionController {
-    async store(request, response) {
-        // Define o esquema de validação usando Yup
-        const schema = Yup.object().shape({
-            email: Yup.string().email().required(), // O email é obrigatório e deve ser válido
-            password: Yup.string().required(), // A senha é obrigatória
-        });
+  async store(request, response) {
+    const schema = Yup.object().shape({
+      email: Yup.string().email().required(),
+      password: Yup.string().required(),
+    })
 
-        // Função para tratar erro de email ou senha incorretos
-        const userEmailOrPasswordIncorrect = () => {
-            return response
-                .status(400)
-                .json({ error: "Senha ou email incorretos" });
-        };
-
-        // Verifica se os dados enviados são válidos
-        if (!(await schema.isValid(request.body))) userEmailOrPasswordIncorrect();
-
-        const { email, password } = request.body;
-
-        // Busca o usuário pelo email
-        const user = await User.findOne({
-            where: { email },
-        });
-
-        // Se o usuário não existe, retorna erro
-        if (!user) userEmailOrPasswordIncorrect();
-
-        // Verifica se a senha está correta
-        if (!(await user.checkPassword(password))) userEmailOrPasswordIncorrect();
-
-        // Retorna os dados do usuário
-        return response.json({
-            id: user.id,
-            email,
-            name: user.name,
-            admin: user.admin,
-        });
+    const userEmailOrPasswordIncorrect = () => {
+      return response
+        .status(401)
+        .json({ error: 'Make sure your password or email are correct' })
     }
+
+    if (!(await schema.isValid(request.body))) userEmailOrPasswordIncorrect()
+
+    const { email, password } = request.body
+
+    const user = await User.findOne({
+      where: { email },
+    })
+
+    if (!user) userEmailOrPasswordIncorrect()
+
+    if (!(await user.checkPassword(password))) userEmailOrPasswordIncorrect()
+
+    return response.json({
+      id: user.id,
+      email,
+      name: user.name,
+      admin: user.admin,
+      token: jwt.sign({ id: user.id }, "3cb9a9877808799754edd99facf43569", {
+        expiresIn: "5d",
+      }),
+    })
+  }
 }
 
-export default new SessionController();
+export default new SessionController()

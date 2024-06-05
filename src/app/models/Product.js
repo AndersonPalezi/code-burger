@@ -12,7 +12,7 @@ class Product extends Model {
                     type: Sequelize.VIRTUAL, // Define um campo virtual chamado "url"
                     get() {
                         // Função para obter o valor do campo virtual "url"
-                        return `http://localhost:3000/products-file/${this.path}`;
+                        return `http://localhost:3000/products-file/${this.path}`
                         // Retorna a URL completa com base no valor de "this.path"
                     },
                 },

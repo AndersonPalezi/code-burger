@@ -26,7 +26,7 @@ class App {
     // Método middlewares responsável por configurar os middlewares da aplicação
     middlewares() {
         // Adiciona o middleware express.json() para que a aplicação possa lidar com requisições JSON
-        this.app.use(express.json());
+        this.app.use(express.json())
         this.app.use(
         "/product-file",
         express.static(resolve(__dirname,"..","uploads"))
