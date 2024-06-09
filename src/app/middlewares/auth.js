@@ -21,7 +21,7 @@ export default (request, response, next) => {
 
     }
     catch (err) {
-     return response,status(401).json({error:"Token invalado "})
+     return response.status(401).json({error:"Token invalado "})
     }
 
     

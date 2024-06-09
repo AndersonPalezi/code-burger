@@ -1,16 +1,20 @@
 // Importa a classe Sequelize do pacote sequelize
 import { Sequelize } from "sequelize";
 
+// importa a a configuraçao da categoria
+import Category from "../app/models/Category";
+
 // Importa a configuração do banco de dados a partir de um arquivo de configuração
 import configDatabase from "../config/database";
 
 // Importa o modelo User
 import User from "../app/models/User";
 
+//importa as configiraçoes  dos produtos
 import Product from "../app/models/Product";
 
 // Cria um array contendo todos os modelos a serem inicializados
-const models = [User, Product];
+const models = [User, Product, Category];
 
 // Define a classe Database que será responsável pela inicialização e configuração do banco de dados
 class Database {
