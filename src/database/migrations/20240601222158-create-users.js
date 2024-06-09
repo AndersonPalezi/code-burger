@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false, // Não permite valores nulos.
         unique: true, // Garante que os valores sejam únicos.
       },
-      password_hash: { // Define que a senha sera criptografada no e armazenda no banco de dados com passoword_hash
+      password_hash: { // Define que a senha sera criptografada e armazenda no banco de dados com passoword_hash
         type: Sequelize.STRING, // Define o tipo de dado como STRING.
         allowNull: false, // Não permite valores nulos.
       },

@@ -13,7 +13,7 @@ class SessionController {
     const userEmailOrPasswordIncorrect = () => {
       return response
         .status(401)
-        .json({ error: 'Make sure your password or email are correct' })
+        .json({ error: 'Dados incorretos  ou inexistente.' })
     }
 
     if (!(await schema.isValid(request.body))) userEmailOrPasswordIncorrect()
@@ -33,8 +33,8 @@ class SessionController {
       email,
       name: user.name,
       admin: user.admin,
-      token: jwt.sign({ id: user.id }, "3cb9a9877808799754edd99facf43569", {
-        expiresIn: "5d",
+      token: jwt.sign({ id: user.id }, authConfig.secret, {
+        expiresIn: authConfig.expiresIn,
       }),
     })
   }

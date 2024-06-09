@@ -9,6 +9,7 @@ export default {
             // Função para gerar o nome do arquivo
             return callback(null, v4() + extname(file.originalname));
             // Retorna um nome único gerado com base no ID e na extensão do arquivo original
+            
         },
     }),
 };

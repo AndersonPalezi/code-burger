@@ -52,5 +52,5 @@ checkPassword(password) {
   }
 }
 
-// Exportando o modelo User para ser utilizado em outras partes da aplicação
+// Exportando o modelo User para ser utilizado em outras partes da aplicação 
 export default User;
