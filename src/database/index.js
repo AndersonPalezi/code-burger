@@ -1,38 +1,28 @@
-// Importa a classe Sequelize do pacote sequelize
 import { Sequelize } from "sequelize";
-
-// importa a a configuraçao da categoria
 import Category from "../app/models/Category";
-
-// Importa a configuração do banco de dados a partir de um arquivo de configuração
 import configDatabase from "../config/database";
-
-// Importa o modelo User
 import User from "../app/models/User";
-
-//importa as configiraçoes  dos produtos
 import Product from "../app/models/Product";
+import mongoose from "mongoose";
 
-// Cria um array contendo todos os modelos a serem inicializados
 const models = [User, Product, Category];
 
-// Define a classe Database que será responsável pela inicialização e configuração do banco de dados
 class Database {
-    // O construtor da classe é chamado quando uma nova instância da classe Database é criada
-    constructor(){
-        // Chama o método init para inicializar a conexão com o banco de dados e os modelos
+    constructor() {
         this.init();
+        this.mongo();
     }
 
-    // Método init responsável por configurar a conexão com o banco de dados e inicializar os modelos
-    init(){
-        // Cria uma nova conexão Sequelize utilizando as configurações importadas
+    init() {
         this.connection = new Sequelize(configDatabase);
-        
-        // Mapeia o array de modelos e chama o método init de cada modelo, passando a conexão como argumento
-        models.map((model) => model.init(this.connection));
+        models
+            .map((model) => model.init(this.connection))
+            .map((model) => model.associate && model.associate(this.connection.models));
+    }
+
+    mongo() {
+        this.mongoConnection = mongoose.connect("mongodb://localhost:27017/codeburger");
     }
 }
 
-// Exporta uma nova instância da classe Database, permitindo que a configuração do banco de dados seja reutilizada em outras partes da aplicação
 export default new Database();

@@ -5,8 +5,7 @@ class Product extends Model {
         super.init(
             {
                 name: Sequelize.STRING, // Define o campo "name" como uma string
-                price: Sequelize.INTEGER, // Define o campo "price" como um número inteiro
-                category: Sequelize.STRING, // Define o campo "category" como uma string
+                price: Sequelize.INTEGER, // Define o campo "price" como um número inteir
                 path: Sequelize.STRING, // Define o campo "path" como uma string
                 url: {
                     type: Sequelize.VIRTUAL, // Define um campo virtual chamado "url"
@@ -21,6 +20,13 @@ class Product extends Model {
                 sequelize, // Passa a instância do Sequelize para inicialização do modelo
             }
         );
+        return this
+    }
+    static associate(models){
+        this.belongsTo(models.Category,{
+            foreignKey: 'category_id',
+            as:"category",
+        })
     }
 }
 

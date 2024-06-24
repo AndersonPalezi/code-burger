@@ -9,7 +9,8 @@ class Category extends Model {
             {
                 sequelize, // Passa a instância do Sequelize para inicialização do modelo
             }
-        );
+        )
+        return this
     }
 }
 
