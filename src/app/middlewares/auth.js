@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken"
+import jwt, { decode } from "jsonwebtoken"
 import authConfig from "../../config/auth"
 
 export default (request, response, next) => {
@@ -15,6 +15,7 @@ export default (request, response, next) => {
             }
             
             request.userId = decoded.id
+            request.userName = decoded.name
             return next()
         })
 
