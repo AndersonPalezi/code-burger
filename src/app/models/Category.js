@@ -1,17 +1,24 @@
-import Sequelize, { Model } from "sequelize"; // Importa o Sequelize e a classe Model
+import Sequelize, { Model } from 'sequelize'
 
 class Category extends Model {
     static init(sequelize) {
         super.init(
             {
-                name: Sequelize.STRING, // Define o campo "name" como uma string
+                name: Sequelize.STRING,
+                path: Sequelize.STRING,
+                url: {
+                    type: Sequelize.VIRTUAL,
+                    get() {
+                        return `http://localhost:3001/category-file/${this.path}`
+                    },
+                },
             },
             {
-                sequelize, // Passa a instância do Sequelize para inicialização do modelo
+                sequelize,
             }
         )
         return this
     }
 }
 
-export default Category; // Exporta a classe para  Product
+export default Category

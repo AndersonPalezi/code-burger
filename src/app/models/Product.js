@@ -7,6 +7,7 @@ class Product extends Model {
                 name: Sequelize.STRING, // Define o campo "name" como uma string
                 price: Sequelize.INTEGER, // Define o campo "price" como um número inteir
                 path: Sequelize.STRING, // Define o campo "path" como uma string
+                offer:Sequelize.BOOLEAN,// Define o campo "offer" como BOOLEAN
                 url: {
                     type: Sequelize.VIRTUAL, // Define um campo virtual chamado "url"
                     get() {

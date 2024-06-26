@@ -1,55 +1,97 @@
 import { v4 } from "uuid"; // Importa a função v4 para gerar IDs únicos
-import * as Yup from "yup"; // Importa o pacote Yup para validação de esquemas
-import Product from "../models/Product"; // Importa o modelo de produto
-import Category from"../models/Category"
+import * as Yup from 'yup'
+import Product from '../models/Product'
+import Category from '../models/Category'
+import User from '../models/User'
 
 class ProductController {
     async store(request, response) {
-        // Define o esquema de validação usando Yup
-        const schema = Yup.object().shape({
-            name: Yup.string().required(), // O nome é obrigatório
-            price: Yup.number().required(), // O preço é obrigatório e deve ser um número
-            category_id: Yup.number().required(), // A categoria é obrigatória
-        });
-
         try {
-            // Valida os dados recebidos com base no esquema
-            await schema.validateSync(request.body, { abortEarly: false });
+            const schema = Yup.object().shape({
+                name: Yup.string().required(),
+                price: Yup.number().required(),
+                category_id: Yup.number().required(),
+                offer: Yup.boolean(),
+            })
+            try {
+                await schema.validateSync(request.body, { abortEarly: false })
+            } catch (err) {
+                return response.status(400).json({ error: err.errors })
+            }
+            const { admin: isAdmin } = await User.findByPk(request.userId)
+            if (!isAdmin) {
+                return response.status(401).json()
+            }
+            const { filename: path } = request.file
+            const { name, price, category_id, offer } = request.body
+            const product = await Product.create({
+                name,
+                price: price,
+                category_id,
+                path,
+                offer,
+            })
+            return response.json(product)
         } catch (err) {
-            // Se houver erros de validação, retorna uma resposta de erro com os detalhes
-            return response.status(400).json({ error: err.errors });
+            console.log(err)
         }
-
-        const { filename: path } = request.file; // Obtém o caminho do arquivo enviado
-        const { name, price, category_id } = request.body;
-
-        // Cria um novo produto com os dados fornecidos
-        const product = await Product.create({
-            id: v4(), // Gera um ID único
-            name,
-            price,
-            category_id,
-            path,
-        });
-
-        // Retorna os dados do produto criado
-        return response.json(product);
     }
-
     async index(request, response) {
-        // Obtém todos os produtos do banco de dados
         const products = await Product.findAll({
-            include:[{
-                model: "Category",
-                as: "category",
-                attributes:["id","name"]
-            }]
-        });
-        
-         
-        // Retorna a lista de produtos
-        return response.json(products);
+            include: [
+                {
+                    model: Category,
+                    as: 'category',
+                    attributes: ['id', 'name'],
+                },
+            ],
+        })
+        return response.json(products)
+    }
+    async update(request, response) {
+        try {
+            const schema = Yup.object().shape({
+                name: Yup.string(),
+                price: Yup.number(),
+                category_id: Yup.number(),
+                offer: Yup.boolean(),
+            })
+            try {
+                await schema.validateSync(request.body, { abortEarly: false })
+            } catch (err) {
+                return response.status(400).json({ error: err.errors })
+            }
+            const { admin: isAdmin } = await User.findByPk(request.userId)
+            if (!isAdmin) {
+                return response.status(401).json()
+            }
+            const { id } = request.params
+            const product = await Product.findByPk(id)
+            if (!product) {
+                return response
+                    .status(401)
+                    .json({ error: 'Certifique-se de que o ID do produto está correto.' })
+            }
+            let path
+            if (request.file) {
+                path = request.file.filename
+            }
+            const { name, price, category_id, offer } = request.body
+            await Product.update(
+                {
+                    name,
+                    price,
+                    category_id,
+                    path,
+                    offer,
+                },
+                { where: { id } }
+            )
+            return response.status(200).json()
+        } catch (err) {
+            console.log(err)
+        }
     }
 }
 
-export default new ProductController();
+export default new ProductController()
