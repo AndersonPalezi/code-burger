@@ -66,7 +66,7 @@ class CategoryController {
             await Category.update({ name, path }, { where: { id } })
             return response.status(200).json()
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }
 }
